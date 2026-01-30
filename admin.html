@@ -8,7 +8,6 @@
     <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap">
-    <link rel="stylesheet" href="style.css">
     
     <style>
         .admin-main {
@@ -704,36 +703,24 @@
                             <div class="form-group">
                                 <label class="form-label" for="upload-description">📝 Bayanin Littafi (Description)</label>
                                 <textarea id="upload-description" class="form-input" rows="3" 
-                                          placeholder="Ƙaramin bayani game da littafin..."></textarea>
+                                          placeholder="Ƙaramin bayani game da littafin..." aria-label="Description of the document"></textarea>
                             </div>
                             
-                            <!-- Row 3: Language & Category -->
+                            <!-- Row 3: Language & Category - UPDATED TO DROPDOWNS -->
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label class="form-label">🗣️ Harshe (Language)*</label>
-                                    <div class="radio-group">
-                                        <label class="radio-label">
-                                            <input type="radio" name="language" value="hausa" checked>
-                                            <span>Hausa</span>
-                                        </label>
-                                        <label class="radio-label">
-                                            <input type="radio" name="language" value="english">
-                                            <span>English</span>
-                                        </label>
-                                        <label class="radio-label">
-                                            <input type="radio" name="language" value="arabic">
-                                            <span>Arabic (عربي)</span>
-                                        </label>
-                                        <label class="radio-label">
-                                            <input type="radio" name="language" value="other">
-                                            <span>Sauran (Others)</span>
-                                        </label>
-                                    </div>
+                                    <label class="form-label" for="upload-language">🗣️ Harshe (Language)*</label>
+                                    <select id="upload-language" class="form-input" required aria-label="Select language">
+                                        <option value="hausa">Hausa</option>
+                                        <option value="english">English</option>
+                                        <option value="arabic">Arabic (عربي)</option>
+                                        <option value="other">Sauran (Others)</option>
+                                    </select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label class="form-label" for="upload-category">📚 Rukuni (Category)*</label>
-                                    <select id="upload-category" class="form-input" required>
+                                    <select id="upload-category" class="form-input" required aria-label="Select category">
                                         <option value="">Zaɓi rukuni...</option>
                                         <option value="history">Tarihi (History)</option>
                                         <option value="ideology">Akida (Ideology)</option>
@@ -741,25 +728,26 @@
                                         <option value="lists">Jerin (Lists)</option>
                                         <option value="biography">Tarihin Rayuwa (Biography)</option>
                                         <option value="sermons">Wa'azi (Sermons)</option>
+                                        <option value="mujalla">Mujalla (Magazine)</option>
                                         <option value="other">Sauran (Others)</option>
                                     </select>
                                 </div>
                             </div>
                             
-                            <!-- Row 4: Source & External Link -->
+                            <!-- Row 4: Source & External Link - UPDATED WITH ARIA-LABELS -->
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">🔗 Tushe (Source)*</label>
                                     <div class="radio-group">
-                                        <label class="radio-label">
+                                        <label class="radio-label" aria-label="Intizarul Imamul Muntazar">
                                             <input type="radio" name="source" value="intizar" checked>
                                             <span>Intizarul Imamul Muntazar</span>
                                         </label>
-                                        <label class="radio-label">
+                                        <label class="radio-label" aria-label="Rubutun Mutum (Individual Writing)">
                                             <input type="radio" name="source" value="individual">
                                             <span>Rubutun Mutum (Individual Writing)</span>
                                         </label>
-                                        <label class="radio-label">
+                                        <label class="radio-label" aria-label="Tushen Waje (External Source)">
                                             <input type="radio" name="source" value="external">
                                             <span>Tushen Waje (External Source)</span>
                                         </label>
@@ -865,58 +853,47 @@
                                           placeholder="Ƙaramin bayani game da PDF..."></textarea>
                             </div>
                             
-                            <!-- Row 3: Language & Category -->
+                            <!-- Row 3: Language & Category - UPDATED TO DROPDOWNS -->
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label class="form-label">🗣️ Harshe (Language)*</label>
-                                    <div class="radio-group">
-                                        <label class="radio-label">
-                                            <input type="radio" name="gen-language" value="hausa" checked>
-                                            <span>Hausa</span>
-                                        </label>
-                                        <label class="radio-label">
-                                            <input type="radio" name="gen-language" value="english">
-                                            <span>English</span>
-                                        </label>
-                                        <label class="radio-label">
-                                            <input type="radio" name="gen-language" value="arabic">
-                                            <span>Arabic (عربي)</span>
-                                        </label>
-                                        <label class="radio-label">
-                                            <input type="radio" name="gen-language" value="other">
-                                            <span>Sauran (Others)</span>
-                                        </label>
-                                    </div>
+                                    <label class="form-label" for="generate-language">🗣️ Harshe (Language)*</label>
+                                    <select id="generate-language" class="form-input" required aria-label="Select language">
+                                        <option value="hausa">Hausa</option>
+                                        <option value="english">English</option>
+                                        <option value="arabic">Arabic (عربي)</option>
+                                        <option value="other">Sauran (Others)</option>
+                                    </select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label class="form-label" for="generate-category">📚 Rukuni (Category)*</label>
-                                    <select id="generate-category" class="form-input" required>
+                                    <select id="generate-category" class="form-input" required aria-label="Select category">
                                         <option value="articles">Kasidu (Articles)</option>
                                         <option value="history">Tarihi (History)</option>
                                         <option value="ideology">Akida (Ideology)</option>
                                         <option value="lists">Jerin (Lists)</option>
                                         <option value="biography">Tarihin Rayuwa (Biography)</option>
                                         <option value="sermons">Wa'azi (Sermons)</option>
+                                        <option value="mujalla">Mujalla (Magazine)</option>
                                         <option value="other">Sauran (Others)</option>
                                     </select>
                                 </div>
                             </div>
                             
-                            <!-- Row 4: Source & External Link -->
+                            <!-- Row 4: Source & External Link - UPDATED WITH ARIA-LABELS -->
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">🔗 Tushe (Source)*</label>
                                     <div class="radio-group">
-                                        <label class="radio-label">
+                                        <label class="radio-label" aria-label="Intizarul Imamul Muntazar">
                                             <input type="radio" name="gen-source" value="intizar" checked>
                                             <span>Intizarul Imamul Muntazar</span>
                                         </label>
-                                        <label class="radio-label">
+                                        <label class="radio-label" aria-label="Rubutun Mutum (Individual Writing)">
                                             <input type="radio" name="gen-source" value="individual">
                                             <span>Rubutun Mutum (Individual Writing)</span>
                                         </label>
-                                        <label class="radio-label">
+                                        <label class="radio-label" aria-label="Tushen Waje (External Source)">
                                             <input type="radio" name="gen-source" value="external">
                                             <span>Tushen Waje (External Source)</span>
                                         </label>
@@ -935,7 +912,9 @@
                                 <label class="form-label" for="generate-content">📄 Abun ciki (Document Content)*</label>
                                 <textarea id="generate-content" class="form-input" 
                                           rows="10" placeholder="Shigar da abun ciki a nan..." 
-                                          style="min-height: 200px; resize: vertical;" required></textarea>
+                                          style="min-height: 200px; resize: vertical;" 
+                                          required
+                                          aria-label="Content for PDF generation"></textarea>
                                 <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">
                                     <i class="fas fa-info-circle"></i> Yi amfani da rubutu ko ƙirar HTML
                                 </div>
