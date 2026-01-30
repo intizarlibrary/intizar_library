@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Intizar Digital Library</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .admin-main {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0f7f4 0%, #e0eee8 100%);
+            padding: 20px;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(11, 61, 46, 0.1);
+            overflow: hidden;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .admin-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent);
+        }
+        
+        .admin-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            margin-bottom: 1rem;
+            background: white;
+            padding: 8px;
+        }
+        
+        .admin-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .admin-subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .admin-content {
+            padding: 2rem;
+            min-height: 500px;
+        }
+        
+        /* Login Form */
+        .login-form-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e6e3;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(19, 97, 74, 0.1);
+        }
+        
+        /* Dashboard */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f7f4;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f0f7f4;
+            padding-bottom: 10px;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: #f0f7f4;
+            border: none;
+            border-radius: 6px 6px 0 0;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: #e0eee8;
+            color: var(--primary-dark);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Forms in Tabs */
+        .form-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .form-card h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-preview {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 2px dashed #ddd;
+            text-align: center;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        /* Radio group styles */
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 2px solid #e0e6e3;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .radio-label:hover {
+            background: #e0eee8;
+            border-color: var(--primary);
+        }
+        
+        .radio-label input[type="radio"] {
+            margin: 0;
+        }
+        
+        /* Cover thumbnail in preview */
+        #cover-thumb {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-left: auto;
+        }
+        
+        /* Documents Table */
+        .documents-table-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+        
+        .documents-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .documents-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .documents-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f7f4;
+        }
+        
+        .documents-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .doc-type-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .doc-type-pdf {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .doc-type-docx {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .doc-type-generated {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .action-btn.view {
+            background: #f0f7f4;
+            color: var(--primary-dark);
+        }
+        
+        .action-btn.delete {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(19, 97, 74, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f0f7f4;
+            color: var(--primary-dark);
+            border: 2px solid #ccc;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0eee8;
+        }
+        
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #ff5252;
+        }
+        
+        .btn-logout {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .btn-logout:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Status Messages */
+        .status-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+        
+        /* Surah loading overlay */
+        .surah-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0b3d2e 0%, #13614a 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c99a6b;
+            font-family: 'Amiri', 'Traditional Arabic', serif;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .surah-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+        }
+        
+        .bismillah {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #f0f7f4;
+            opacity: 0;
+        }
+        
+        .surah-text {
+            font-size: 2rem;
+            line-height: 1.8;
+            text-align: justify;
+            direction: rtl;
+            opacity: 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-content {
+                padding: 1rem;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                border-radius: 6px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- Surah Loading Overlay -->
+    <div id="surah-overlay" class="surah-loading-overlay">
+        <div class="surah-container">
+            <div class="bismillah" id="bismillah-text"></div>
+            <div class="surah-text" id="surah-text"></div>
+        </div>
+    </div>
+    
+    <main class="admin-main">
+        <div class="admin-container" id="login-screen">
+            <!-- Login Screen -->
+            <div class="admin-header">
+                <img src="logo.png" alt="Intizar Logo" class="admin-logo">
+                <h1 class="admin-title">
+                    <i class="fas fa-lock"></i> Admin Portal
+                </h1>
+                <p class="admin-subtitle">Intizar Digital Library Content Management</p>
+            </div>
+            
+            <div class="admin-content">
+                <div class="login-form-container">
+                    <h2 style="color: var(--primary-dark); margin-bottom: 2rem; text-align: center;">
+                        Administrator Login
+                    </h2>
+                    
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label class="form-label" for="username">
+                                <i class="fas fa-user"></i> Username
+                            </label>
+                            <input type="text" id="username" class="form-input" 
+                                   placeholder="Enter admin username" required autocomplete="username">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="password">
+                                <i class="fas fa-key"></i> Password
+                            </label>
+                            <input type="password" id="password" class="form-input" 
+                                   placeholder="Enter admin password" required autocomplete="current-password">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;" id="login-btn">
+                            <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                        </button>
+                    </form>
+                    
+                    <div id="login-status"></div>
+                    
+                    <div style="text-align: center; margin-top: 2rem; color: #666;">
+                        <p>
+                            <i class="fas fa-info-circle"></i>
+                            For security, this portal is restricted to authorized personnel only.
+                        </p>
+                        <a href="index.html" style="color: var(--primary); text-decoration: none; margin-top: 1rem; display: inline-block;">
+                            <i class="fas fa-arrow-left"></i> Back to Public Library
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard (Hidden until login) -->
+        <div class="admin-container hidden" id="dashboard">
+            <div class="admin-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <img src="logo.png" alt="Logo" class="admin-logo">
+                    <div style="text-align: left;">
+                        <h1 class="admin-title">
+                            <i class="fas fa-cogs"></i> Admin Dashboard
+                        </h1>
+                        <p class="admin-subtitle">Welcome, <span id="admin-name">Administrator</span></p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <!-- NEW: Home Button -->
+                    <a href="index.html" class="btn btn-secondary" id="home-btn">
+                        <i class="fas fa-home"></i> Gida (Home)
+                    </a>
+                    
+                    <button id="logout-btn" class="btn btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Fita (Logout)
+                    </button>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <!-- Stats Overview -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-file-pdf"></i>
+                        <div class="stat-value" id="stat-total">0</div>
+                        <div class="stat-label">Jimlar Littattafai (Total Documents)</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <div class="stat-value" id="stat-pdf">0</div>
+                        <div class="stat-label">Fayilolin PDF (PDF Files)</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-file-word"></i>
+                        <div class="stat-value" id="stat-docx">0</div>
+                        <div class="stat-label">Fayilolin DOCX (DOCX Files)</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-magic"></i>
+                        <div class="stat-value" id="stat-generated">0</div>
+                        <div class="stat-label">PDFs da aka ƙirƙira (Generated PDFs)</div>
+                    </div>
+                </div>
+                
+                <!-- Status Messages -->
+                <div id="dashboard-status"></div>
+                
+                <!-- Tabs Navigation -->
+                <div class="admin-tabs">
+                    <button class="tab-btn active" data-tab="upload">
+                        <i class="fas fa-upload"></i> Ɗora Sabon Littafi (Upload Document)
+                    </button>
+                    <button class="tab-btn" data-tab="generate">
+                        <i class="fas fa-file-pdf"></i> Ƙirƙira PDF (Generate PDF)
+                    </button>
+                    <button class="tab-btn" data-tab="manage">
+                        <i class="fas fa-list"></i> Sarrafa Littattafai (Manage Documents)
+                    </button>
+                </div>
+                
+                <!-- Upload Tab -->
+                <div class="tab-content active" id="tab-upload">
+                    <div class="form-card">
+                        <h3><i class="fas fa-cloud-upload-alt"></i> Ɗora Sabon Littafi (Upload New Document)</h3>
+                        <p style="color: #666; margin-bottom: 1.5rem;">
+                            Ɗora fayilolin PDF ko DOCX zuwa cibiyar littattafai. Fayilolin za a ajiye su cikin aminci a cikin Google Drive.
+                        </p>
+                        
+                        <form id="upload-form">
+                            <!-- Row 1: Title & Author -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="upload-title">📖 Sunan Littafi (Title)*</label>
+                                    <input type="text" id="upload-title" class="form-input" 
+                                           placeholder="Shigar da sunan littafi" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="upload-author">✍️ Marubuci (Author)*</label>
+                                    <input type="text" id="upload-author" class="form-input" 
+                                           placeholder="Shigar da sunan marubuci" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Row 2: Description -->
+                            <div class="form-group">
+                                <label class="form-label" for="upload-description">📝 Bayanin Littafi (Description)</label>
+                                <textarea id="upload-description" class="form-input" rows="3" 
+                                          placeholder="Ƙaramin bayani game da littafin..."></textarea>
+                            </div>
+                            
+                            <!-- Row 3: Language & Category -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">🗣️ Harshe (Language)*</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="language" value="hausa" checked>
+                                            <span>Hausa</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="language" value="english">
+                                            <span>English</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="language" value="arabic">
+                                            <span>Arabic (عربي)</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="language" value="other">
+                                            <span>Sauran (Others)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="upload-category">📚 Rukuni (Category)*</label>
+                                    <select id="upload-category" class="form-input" required>
+                                        <option value="">Zaɓi rukuni...</option>
+                                        <option value="history">Tarihi (History)</option>
+                                        <option value="ideology">Akida (Ideology)</option>
+                                        <option value="articles">Kasidu (Articles)</option>
+                                        <option value="lists">Jerin (Lists)</option>
+                                        <option value="biography">Tarihin Rayuwa (Biography)</option>
+                                        <option value="sermons">Wa'azi (Sermons)</option>
+                                        <option value="other">Sauran (Others)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Row 4: Source & External Link -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">🔗 Tushe (Source)*</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="source" value="intizar" checked>
+                                            <span>Intizarul Imamul Muntazar</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="source" value="individual">
+                                            <span>Rubutun Mutum (Individual Writing)</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="source" value="external">
+                                            <span>Tushen Waje (External Source)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="upload-external">🌐 Hanyar haɗin waje (External Link)</label>
+                                    <input type="url" id="upload-external" class="form-input" 
+                                           placeholder="https://example.com/book">
+                                </div>
+                            </div>
+                            
+                            <!-- Row 5: Cover Image -->
+                            <div class="form-group">
+                                <label class="form-label" for="upload-cover">🖼️ Hoton Murfin (Cover Image)</label>
+                                <input type="file" id="upload-cover" class="form-input" accept=".png,.jpg,.jpeg">
+                                <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">
+                                    <i class="fas fa-info-circle"></i> Ana karɓar PNG, JPG, JPEG kawai (matsakaicin girman 5MB)
+                                </div>
+                            </div>
+                            
+                            <!-- Row 6: Main File Upload -->
+                            <div class="form-group">
+                                <label class="form-label" for="upload-file">📄 Zaɓi Fayil (Select File)*</label>
+                                <div style="position: relative;">
+                                    <input type="file" id="upload-file" class="form-input" 
+                                           accept=".pdf,.docx" required
+                                           style="padding: 30px 15px; border: 2px dashed #ccc; background: #f8f9fa;">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                                        <p>Danna don bincika ko ja & sauke fayilolin PDF/DOCX</p>
+                                        <p style="font-size: 0.9rem; color: #999;">Matsakaicin girman fayil: 20MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- File Preview -->
+                            <div id="file-preview" class="file-preview hidden">
+                                <div class="file-info">
+                                    <i class="fas fa-file-pdf file-icon"></i>
+                                    <div>
+                                        <strong id="file-name">example.pdf</strong>
+                                        <div id="file-size" style="font-size: 0.9rem; color: #666;">0 KB</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Cover Preview -->
+                            <div id="cover-preview" class="file-preview hidden">
+                                <div class="file-info">
+                                    <i class="fas fa-image file-icon"></i>
+                                    <div>
+                                        <strong id="cover-name">cover.jpg</strong>
+                                        <div id="cover-size" style="font-size: 0.9rem; color: #666;">0 KB</div>
+                                    </div>
+                                    <img id="cover-thumb" src="" alt="Cover preview" style="max-width: 100px; max-height: 100px; border-radius: 4px;">
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Buttons -->
+                            <div style="margin-top: 2rem;">
+                                <button type="submit" class="btn btn-primary" id="upload-submit">
+                                    <i class="fas fa-cloud-upload-alt"></i> Ɗora zuwa Cibiyar Littattafai (Upload to Library)
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="upload-reset" style="margin-left: 10px;">
+                                    <i class="fas fa-redo"></i> Share Fom (Clear Form)
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div id="upload-status"></div>
+                    </div>
+                </div>
+                
+                <!-- Generate PDF Tab -->
+                <div class="tab-content" id="tab-generate">
+                    <div class="form-card">
+                        <h3><i class="fas fa-magic"></i> Ƙirƙira PDF daga Abun ciki (Generate PDF from Content)</h3>
+                        <p style="color: #666; margin-bottom: 1.5rem;">
+                            Ƙirƙiri fayilolin PDF na ƙwararru kai tsaye daga rubutu. PDF ɗin za a tsara shi kai tsaye kuma a ƙara shi zuwa cibiyar littattafai.
+                        </p>
+                        
+                        <form id="generate-form">
+                            <!-- Row 1: Title & Author -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="generate-title">📖 Sunan PDF (PDF Title)*</label>
+                                    <input type="text" id="generate-title" class="form-input" 
+                                           placeholder="Shigar da sunan PDF" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="generate-author">✍️ Marubuci (Author)*</label>
+                                    <input type="text" id="generate-author" class="form-input" 
+                                           placeholder="Shigar da sunan marubuci" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Row 2: Description -->
+                            <div class="form-group">
+                                <label class="form-label" for="generate-description">📝 Bayanin (Description)</label>
+                                <textarea id="generate-description" class="form-input" rows="2" 
+                                          placeholder="Ƙaramin bayani game da PDF..."></textarea>
+                            </div>
+                            
+                            <!-- Row 3: Language & Category -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">🗣️ Harshe (Language)*</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="gen-language" value="hausa" checked>
+                                            <span>Hausa</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="gen-language" value="english">
+                                            <span>English</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="gen-language" value="arabic">
+                                            <span>Arabic (عربي)</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="gen-language" value="other">
+                                            <span>Sauran (Others)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="generate-category">📚 Rukuni (Category)*</label>
+                                    <select id="generate-category" class="form-input" required>
+                                        <option value="articles">Kasidu (Articles)</option>
+                                        <option value="history">Tarihi (History)</option>
+                                        <option value="ideology">Akida (Ideology)</option>
+                                        <option value="lists">Jerin (Lists)</option>
+                                        <option value="biography">Tarihin Rayuwa (Biography)</option>
+                                        <option value="sermons">Wa'azi (Sermons)</option>
+                                        <option value="other">Sauran (Others)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Row 4: Source & External Link -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">🔗 Tushe (Source)*</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="gen-source" value="intizar" checked>
+                                            <span>Intizarul Imamul Muntazar</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="gen-source" value="individual">
+                                            <span>Rubutun Mutum (Individual Writing)</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="gen-source" value="external">
+                                            <span>Tushen Waje (External Source)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="generate-external">🌐 Hanyar haɗin waje (External Link)</label>
+                                    <input type="url" id="generate-external" class="form-input" 
+                                           placeholder="https://example.com/document">
+                                </div>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div class="form-group">
+                                <label class="form-label" for="generate-content">📄 Abun ciki (Document Content)*</label>
+                                <textarea id="generate-content" class="form-input" 
+                                          rows="10" placeholder="Shigar da abun ciki a nan..." 
+                                          style="min-height: 200px; resize: vertical;" required></textarea>
+                                <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">
+                                    <i class="fas fa-info-circle"></i> Yi amfani da rubutu ko ƙirar HTML
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Buttons -->
+                            <div style="margin-top: 2rem;">
+                                <button type="submit" class="btn btn-primary" id="generate-submit">
+                                    <i class="fas fa-magic"></i> Ƙirƙira & Ajiye PDF (Generate & Save PDF)
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="generate-preview">
+                                    <i class="fas fa-eye"></i> Duba Tsari (Preview Formatting)
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div id="generate-status"></div>
+                    </div>
+                </div>
+                
+                <!-- Manage Documents Tab -->
+                <div class="tab-content" id="tab-manage">
+                    <div class="form-card">
+                        <h3><i class="fas fa-list"></i> Sarrafa Littattafai (Document Management)</h3>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <div>
+                                <input type="text" id="search-docs" class="form-input" 
+                                       placeholder="Nemo littattafai (Search documents)..." style="width: 300px;">
+                            </div>
+                            <div>
+                                <button class="btn btn-secondary" id="refresh-docs">
+                                    <i class="fas fa-sync-alt"></i> Sabunta Jerin (Refresh List)
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="documents-table-container">
+                            <table class="documents-table" id="documents-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sunan Littafi (Title)</th>
+                                        <th>Marubuci (Author)</th>
+                                        <th>Harshe (Language)</th>
+                                        <th>Rukuni (Category)</th>
+                                        <th>Tushe (Source)</th>
+                                        <th>Nau'in (Type)</th>
+                                        <th>Ranar Ƙara (Date Added)</th>
+                                        <th>Ayyuka (Actions)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="documents-list">
+                                    <!-- Documents will be loaded here -->
+                                    <tr>
+                                        <td colspan="8" style="text-align: center; padding: 3rem;">
+                                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #ccc;"></i>
+                                            <p style="margin-top: 1rem; color: #666;">Ana loda littattafai....</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="manage-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+</body>
+</html>

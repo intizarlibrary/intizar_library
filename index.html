@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intizar Digital Library</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Surah Loading Overlay -->
+    <div id="surah-overlay" class="surah-loading-overlay">
+        <div class="surah-container">
+            <div class="bismillah" id="bismillah-text"></div>
+            <div class="surah-text" id="surah-text"></div>
+        </div>
+    </div>
+
+    <!-- Header with Hamburger Menu -->
+    <header>
+        <div class="container header-container">
+            <div class="logo-section">
+                <img src="logo.png" alt="Intizarul Imamul Muntazar Logo" class="logo">
+                <div>
+                    <h1>Intizar Digital Library</h1>
+                    <p class="tagline">Scholarly resources on Mahdawiyyah</p>
+                </div>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <a href="#" class="nav-link" data-page="home">Gida (Home)</a>
+                <a href="#" class="nav-link" data-page="library">Cibiyar Littattafai (Library)</a>
+                <a href="#" class="nav-link" data-page="about">Game da (About)</a>
+                <a href="admin.html" class="nav-link">Admin</a>
+            </nav>
+            
+            <!-- Hamburger Menu Button -->
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav" id="mobile-nav">
+            <div class="mobile-nav-header">
+                <h3>Menu</h3>
+                <button class="close-menu" id="close-menu">&times;</button>
+            </div>
+            <div class="mobile-nav-links">
+                <a href="#" class="mobile-nav-link" data-page="home">
+                    <i class="fas fa-home"></i> Gida (Home)
+                </a>
+                <a href="#" class="mobile-nav-link" data-page="library">
+                    <i class="fas fa-book"></i> Cibiyar Littattafai (Library)
+                </a>
+                <a href="#" class="mobile-nav-link" data-page="about">
+                    <i class="fas fa-info-circle"></i> Game da (About)
+                </a>
+                <a href="admin.html" class="mobile-nav-link">
+                    <i class="fas fa-cogs"></i> Admin
+                </a>
+                <a href="#" class="mobile-nav-link ai-mobile-btn">
+                    <i class="fas fa-robot"></i> Tambayi Mataimakin AI
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page active">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-text">
+                    <h2>Barka da zuwa Cibiyar Littattafai ta Intizarul Imamul Muntazar</h2>
+                    <p>Samu ayyukan ilimi, wallafe-wallafe, da albarkatu kan koyarwar Imam Mahdi (A.J.F) da ƙungiyar Mahdawiyyah.</p>
+                    <a href="#" class="hero-btn" data-page="library">Duba Cikakken Cibiyar Littattafai <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="hero-images">
+                    <img src="imam-mahdi.jpg" alt="Imam Mahdi (A.J.F)" class="hero-img">
+                    <img src="sayyid-zakzaky.jpg" alt="Sayyid Zakzaky" class="hero-img">
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Documents -->
+        <main class="container">
+            <section class="featured-section">
+                <h2><i class="fas fa-star"></i> Littattafai Masu Fitowa (Featured Documents)</h2>
+                <p class="section-subtitle">Ayyukan ilimi da aka ƙara kwanan nan</p>
+                
+                <div class="document-grid" id="featured-documents">
+                    <!-- Featured documents will be loaded here -->
+                </div>
+                
+                <div class="view-all-container">
+                    <a href="#" class="view-all-btn" data-page="library">
+                        Duba Duk Littattafai <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Default Documents Section -->
+            <section class="default-documents">
+                <h3><i class="fas fa-archive"></i> Tarin Asali (Core Collection)</h3>
+                <p class="section-subtitle">Muhimman kayan karatu da aka haɗa da cibiyar littattafai</p>
+                
+                <div class="document-grid">
+                    <!-- Default Document 1 -->
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="doc-info">
+                            <h4>Gabatarwar Mahdawiyyah</h4>
+                            <p class="doc-meta">Marubuci: Ƙungiyar Binciken Intizar</p>
+                            <p class="doc-description">Cikakken gabatarwa game da manufar Mahdawiyyah da muhimmancinta.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <a href="intizar1.pdf" target="_blank" class="doc-btn">Karanta PDF</a>
+                            <a href="intizar1.pdf" download class="doc-btn secondary">Zazzagewa</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Default Document 2 -->
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="doc-info">
+                            <h4>Manufar Intizar</h4>
+                            <p class="doc-meta">Marubuci: Ƙungiyar Binciken Intizar</p>
+                            <p class="doc-description">Nazarin tauhidi da aikace-aikacen jiran Imam Mahdi (A.J.F).</p>
+                        </div>
+                        <div class="doc-actions">
+                            <a href="intizar2.pdf" target="_blank" class="doc-btn">Karanta PDF</a>
+                            <a href="intizar2.pdf" download class="doc-btn secondary">Zazzagewa</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Default Document 3 -->
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="doc-info">
+                            <h4>Imam Mahdi a cikin Littattafan Zamani</h4>
+                            <p class="doc-meta">Marubuci: Ƙungiyar Binciken Intizar</p>
+                            <p class="doc-description">Maganganu da bincike daga adabin Musulunci na zamani.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <a href="intizar3.pdf" target="_blank" class="doc-btn">Karanta PDF</a>
+                            <a href="intizar3.pdf" download class="doc-btn secondary">Zazzagewa</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Library Page (Without Hero) -->
+    <div id="library-page" class="page">
+        <main class="container library-page-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-book-open"></i> Cibiyar Littattafai ta Yanar Gizo (Digital Library)</h1>
+                <p class="page-subtitle">Bincika duk littattafai da albarkatu da suke akwai</p>
+            </div>
+
+            <!-- Controls -->
+            <div class="library-controls">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Nemo littattafai ta suna, marubuci, ko kalmomi...">
+                </div>
+                <div class="filter-controls">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="filter-language">🏳️ Tace ta Harshe:</label>
+                            <select id="filter-language" class="filter-select">
+                                <option value="all">Duk Harsuna</option>
+                                <option value="hausa">Hausa</option>
+                                <option value="english">English</option>
+                                <option value="arabic">Arabic (عربي)</option>
+                                <option value="other">Sauran</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filter-category">📚 Tace ta Rukuni:</label>
+                            <select id="filter-category" class="filter-select">
+                                <option value="all">Duk Rukunoni</option>
+                                <option value="history">Tarihi</option>
+                                <option value="ideology">Akida</option>
+                                <option value="articles">Kasidu</option>
+                                <option value="lists">Jerin</option>
+                                <option value="biography">Tarihin Rayuwa</option>
+                                <option value="sermons">Wa'azi</option>
+                                <option value="other">Sauran</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filter-source">🔗 Tace ta Tushe:</label>
+                            <select id="filter-source" class="filter-select">
+                                <option value="all">Duk Tushe</option>
+                                <option value="intizar">Intizarul Imamul Muntazar</option>
+                                <option value="individual">Rubutun Mutum</option>
+                                <option value="external">Tushen Waje</option>
+                            </select>
+                        </div>
+                        
+                        <button id="reset-filters" class="filter-reset-btn">
+                            <i class="fas fa-redo"></i> Sake Saitawa
+                        </button>
+                    </div>
+                    
+                    <!-- Filter Count Display -->
+                    <div id="filter-count" class="filter-count"></div>
+                </div>
+            </div>
+
+            <!-- Library Stats -->
+            <div class="library-stats">
+                <div class="stat-card">
+                    <i class="fas fa-file-pdf"></i>
+                    <div>
+                        <h3 id="total-docs">0</h3>
+                        <p>Duk Littattafai</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h3 id="recent-docs">0</h3>
+                        <p>Ƙarawa a Wannan Watan</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-download"></i>
+                    <div>
+                        <h3 id="available-docs">12</h3>
+                        <p>Koyaushe Ana Samu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Grid -->
+            <div class="document-grid" id="library-documents">
+                <!-- Books will be loaded here with new structure -->
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" class="loading-indicator">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Ana loda littattafai...</p>
+            </div>
+
+            <!-- Default Documents Section -->
+            <section class="default-library-section">
+                <h2><i class="fas fa-archive"></i> Tarin Asali (Permanent Collection)</h2>
+                <p class="section-subtitle">Muhimman littattafai da aka haɗa da aikace-aikacen</p>
+                
+                <div class="default-library-grid">
+                    <!-- Core Document 1 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Gabatarwar Mahdawiyyah</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Muhimmin karatu don fahimtar koyarwar Mahdawiyyah.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-1">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar1.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar1.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 2 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Manufar Intizar</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Nazarin tauhidi game da jiran Imam Mahdi (A.J.F).</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-2">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar2.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar2.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 3 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Imam Mahdi a cikin Littattafan Zamani</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Maganganu da bincike daga adabin Musulunci na zamani.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-3">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar3.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar3.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 4 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Koyarwar Sayyid Zakzaky</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Ra'ayoyin zamani game da Mahdawiyyah.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-4">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar4.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar4.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 5 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Mahdawiyyah Tambayoyi & Amsoshi</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Tambayoyi da aka fi yawan yi da amsoshinsu.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-5">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar5.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar5.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 6 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Tarihin Mahdawiyyah</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Ci gaban koyarwar Mahdawiyyah a tarihi.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Tarihi</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-6">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar6.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar6.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 7 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Alamun Bayyanar Imam Mahdi</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Alamun da ke nuna kusancin bayyanar Imam Mahdi.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-7">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar7.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar7.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 8 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Ayyukan Lokacin Ghaybah</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Abubuwan da ya kamata a yi a lokacin ghaybah.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-8">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar8.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar8.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 9 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Raj'ah: Komawar Imam Mahdi</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Bayanan komawar Imam Mahdi (A.J.F).</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-9">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar9.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar9.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 10 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Zuhur: Bayyanar Imam Mahdi</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Cikakken bayani game da bayyanar Imam Mahdi.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-10">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar10.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar10.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 11 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Mahdawiyyah a cikin Alkur'ani</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Nassosin Alkur'ani masu ambaton Imam Mahdi.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-11">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar11.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar11.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Core Document 12 -->
+                    <div class="library-card">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf pdf-icon"></i>
+                            <span class="doc-badge">Littafin Asali</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Alƙawarin Imam Mahdi</h4>
+                            <p class="card-author">Ƙungiyar Binciken Intizar</p>
+                            <p class="card-excerpt">Alƙawarori da alƙawarin Imam Mahdi (A.J.F).</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="core-12">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="intizar12.pdf" target="_blank" class="card-btn">
+                                <i class="fas fa-book-open"></i> Karanta
+                            </a>
+                            <a href="intizar12.pdf" download class="card-btn download">
+                                <i class="fas fa-download"></i> Zazzage
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- EXTERNAL DOCUMENT 1 (with image) -->
+                    <div class="library-card external-card">
+                        <div class="card-header">
+                            <img src="sheikh-zakzaky.jpg" alt="Koyarwar Sheikh Zakzaky" class="doc-cover-img">
+                            <span class="doc-badge">Hanyar Yanar Gizo</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Koyarwar Sheikh Zakzaky</h4>
+                            <p class="card-author">Mai gabatarwa</p>
+                            <p class="card-excerpt">Laccoci kan koyarwar Sheikh Ibraheem Zakzaky game da Mahdawiyyah.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Hausa</span>
+                                <span class="meta-tag">Wa'azi</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="ext-1">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="https://example.com/sheikh-zakzaky" target="_blank" class="card-btn">
+                                <i class="fas fa-external-link-alt"></i> Duba akan Yanar Gizo
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- EXTERNAL DOCUMENT 2 (with image) -->
+                    <div class="library-card external-card">
+                        <div class="card-header">
+                            <img src="quran-mahdi.jpg" alt="Imam Mahdi a cikin Alkur'ani" class="doc-cover-img">
+                            <span class="doc-badge">Hanyar Yanar Gizo</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Imam Mahdi a cikin Alkur'ani</h4>
+                            <p class="card-author">Masana</p>
+                            <p class="card-excerpt">Nassosin Alkur'ani masu ambaton Imam Mahdi.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">Arabic</span>
+                                <span class="meta-tag">Akida</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="ext-2">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="https://example.com/quran-mahdi" target="_blank" class="card-btn">
+                                <i class="fas fa-external-link-alt"></i> Duba akan Yanar Gizo
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- EXTERNAL DOCUMENT 3 (with image) -->
+                    <div class="library-card external-card">
+                        <div class="card-header">
+                            <img src="mahdawiyyah-history.jpg" alt="Tarihin Mahdawiyyah" class="doc-cover-img">
+                            <span class="doc-badge">Hanyar Yanar Gizo</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>Tarihin Mahdawiyyah</h4>
+                            <p class="card-author">Masana tarihi</p>
+                            <p class="card-excerpt">Ci gaban koyarwar Mahdawiyyah a tarihi.</p>
+                            <div class="card-meta">
+                                <span class="meta-tag">English</span>
+                                <span class="meta-tag">Tarihi</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn view-details" data-id="ext-3">
+                                <i class="fas fa-eye"></i> Duba
+                            </button>
+                            <a href="https://example.com/mahdawiyyah-history" target="_blank" class="card-btn">
+                                <i class="fas fa-external-link-alt"></i> Duba akan Yanar Gizo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- About Page -->
+    <div id="about-page" class="page">
+        <main class="container about-container">
+            <div class="about-header">
+                <h1><i class="fas fa-info-circle"></i> Game da Wannan Cibiyar Littattafai</h1>
+                <p class="about-subtitle">Adana da yada ilimin Mahdawiyyah</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-image-section">
+                    <img src="logo.png" alt="Intizarul Imamul Muntazar Logo" class="about-main-logo">
+                    <div class="about-image-grid">
+                        <img src="imam-mahdi.jpg" alt="Imam Mahdi (A.J.F)" class="about-img">
+                        <img src="sayyid-zakzaky.jpg" alt="Sayyid Zakzaky" class="about-img">
+                    </div>
+                </div>
+                
+                <div class="about-text-section">
+                    <!-- Gabatarwar Intizar Content -->
+                    <div class="about-card">
+                        <h2><i class="fas fa-book"></i> Gabatarwar Intizarul Imamul Muntazar</h2>
+                        
+                        <p><strong>Bismihi Ta'ala.</strong></p>
+                        
+                        <p>Tarbiyya wani abu ne mai muhimmancin gaske wanda baya bukatar kafa hujja ko bayani kan muhimmancin sa kuma babban aiki ne da ya kunshi bangarori uku; Gida, Makaranta da Al'umma (muhalli), bai takaita akan Iyaye kadai ba kawai.</p>
+                        
+                        <p><strong>INTIZARUL IMAMUL MUNTAZAR</strong> motsi ne da aka samar don yara yan kasa da shekaru 15, karkashin Mu'assasatu Abul Fadlil Abbas (A.S) na harkar musulunci karkashin jagorancin Sheikh Ibraheem Zakzaky (H).</p>
+                        
+                        <p>An shirya intizar ne domin tattalin yara da tarbiyyantar da ruhin su da tunanin su domin share fagen ga baban aikin tarbar Sahibul Asr Waz-Zaman (AJF), wanda wannan ne mafificin ibadah a wannan zamanin.</p>
+                        
+                        <p>Intizar na matsayin gudunmawa ga iyaye ga iyaye da makarantu don inganta tarbiyyan yaran su, don haka ne intizar ta tanadi tsare-tsare da ayyuka da suka ginu a kan ilimi, kyawawan dabi'u, wayewar Musulunci da hidima ga Al'umma.</p>
+                        
+                        <p>Ta hanyar wadannan tsare-tsaren ne da intizar ke gudanarwa (mako-mako) a ke fatan yaran da ke halarta su zama shiryayyu don taimakon Sahibul Asr Waz-Zaman (AJF) gabadaya.</p>
+                        
+                        <p>Intizar abu ne na ganin dama da sadaukarwa, don haka shiga intizar, don haka shiga intizar abune mai sauki haka ma fita, ana shiga ne ta hanyar halartar ayyukan mako-mako sau biyar a jere, kuma ana fita ne ta hanyar daina halartar ayyukan sau uku a jere.</p>
+                        
+                        <h3 style="color: var(--primary-dark); margin-top: 1.5rem;">Manufofi da Ƙa'idodi na Intizar:</h3>
+                        <ul class="about-list">
+                            <li><i class="fas fa-check-circle"></i> <strong>Manufa (Vision):</strong> Samar ma Imam Mahdi (AJF) mataimaka</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>Manhaja (Mission):</strong> Bai wa yara tarbiyyar ruhi, jiki da tunani don kasancewa na gari kuma shiryayyu don taimakon Sahibul Asr Waz-Zaman</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>Ƙa'idodi (Values):</strong> AMANA, KHIDMATUN-NAS, GIRMAMAWA, GASKIYA, IKHLASI, KAMUN KAI, ILIMI, TAKAWA, TAUSAYAWA, SADAUKARWA, AIKI, BIYAYYA GA IYAYE, INTIZAR & WILAYA</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1.5rem; font-style: italic;">"Allah ya bamu dacewa, Allahumma Ajjil-li-waliyyikal-Faraj."</p>
+                    </div>
+                    
+                    <!-- Rest of about content stays but in Hausa -->
+                    <div class="about-card">
+                        <h2><i class="fas fa-graduation-cap"></i> Yankin Tarawa</h2>
+                        <p>Cibiyar tana da:</p>
+                        <ul class="about-list">
+                            <li><i class="fas fa-check-circle"></i> Littattafai na zamani kan Imam Mahdi (AJF)</li>
+                            <li><i class="fas fa-check-circle"></i> Bincike da nazari na zamani</li>
+                            <li><i class="fas fa-check-circle"></i> Wallafe-wallafen Intizarul Imamul Muntazar</li>
+                            <li><i class="fas fa-check-circle"></i> Albarkatu na ilimi ga ɗalibai</li>
+                            <li><i class="fas fa-check-circle"></i> Kayayyakin koyo da laccoci</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- AI Assistant section in Hausa -->
+                    <div class="about-card">
+                        <h2><i class="fas fa-robot"></i> Mataimakin AI na Mahdawiyyah</h2>
+                        <p>Mataimakin mu na AI an saita shi musamman don amsa tambayoyi masu alaƙa da:</p>
+                        <div class="ai-topics">
+                            <span class="topic-tag">Imam Mahdi (A.J.F)</span>
+                            <span class="topic-tag">Manufar Intizar</span>
+                            <span class="topic-tag">Koyarwar Mahdawiyyah</span>
+                            <span class="topic-tag">Ƙungiyar Zamani</span>
+                            <span class="topic-tag">Koyarwar Sayyid Zakzaky</span>
+                        </div>
+                        <p class="ai-note"><i class="fas fa-info-circle"></i> Mataimakin yana amsa tambayoyi masu alaƙa da Mahdawiyyah kawai. Duk tattaunawa ba a adana su.</p>
+                    </div>
+                    
+                    <!-- Copyright section -->
+                    <div class="about-card copyright-card">
+                        <h2><i class="fas fa-copyright"></i> Bayanin Haƙƙin Mallaka</h2>
+                        <p>Duk abubuwan da ke cikin wannan cibiyar littattafai an ba da su don dalilai na ilimi da bincike.</p>
+                        <p><strong>Haƙƙin Mallaka © 1447 AH / 2026 CE Intizarul Imamul Muntazar.</strong></p>
+                        <p>Duk haƙƙoƙin da aka tanada. Ana hana sake bugawa ko rarrabawa ba tare da izini ba.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- AI Assistant Button (Global) -->
+    <button id="ai-button" class="ai-button" aria-label="Ask AI Assistant">
+        <i class="fas fa-robot"></i> <span class="ai-text">Ask AI</span>
+    </button>
+
+    <!-- AI Modal (Global) -->
+    <div id="ai-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-robot"></i> Mataimakin AI na Mahdawiyyah</h3>
+                <button id="close-ai" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="chat-container">
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="message ai-message">
+                            <div class="message-header">
+                                <i class="fas fa-robot"></i>
+                                <span>Mataimakin Mahdawiyyah</span>
+                            </div>
+                            <p>Assalamu alaikum. Ni mataimakin AI ne kwararre a kan koyarwar Mahdawiyyah. Tambaye ni game da Imam Mahdi (A.J.F), manufar Intizar, ko batutuwa masu alaƙa.</p>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <div class="input-wrapper">
+                            <textarea id="user-input" placeholder="Yi tambayarka a kowane harshe (Arabic, Hausa, English, da sauransu)..." rows="3"></textarea>
+                            <div class="input-actions">
+                                <button id="clear-chat" class="action-btn" title="Share tattaunawa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button id="send-ai" class="send-btn">
+                                    Aika <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ai-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Wannan mataimakin yana amsa tambayoyi masu alaƙa da Mahdawiyyah kawai. Ba a adana tattaunawa.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-section">
+                <img src="logo.png" alt="Logo" class="footer-logo">
+                <div>
+                    <h3>Cibiyar Littattafai ta Intizar</h3>
+                    <p>Albarkatu na ilimi kan Mahdawiyyah</p>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Hanyoyin Saurin Saɓo</h4>
+                <div class="footer-links">
+                    <a href="#" data-page="home">Gida (Home)</a>
+                    <a href="#" data-page="library">Cibiyar Littattafai (Library)</a>
+                    <a href="#" data-page="about">Game da (About)</a>
+                    <a href="admin.html">Admin</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Tuntuɓe</h4>
+                <p><i class="fas fa-envelope"></i> info@intizar.org</p>
+                <p><i class="fas fa-copyright"></i> 1447 AH / 2026 CE</p>
+                <p class="footer-note">Intizarul Imamul Muntazar</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Haƙƙin Mallaka &copy; 1447 AH / 2026 CE Intizarul Imamul Muntazar. Duk haƙƙoƙin da aka tanada.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
