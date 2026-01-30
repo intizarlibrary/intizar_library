@@ -1,6 +1,15 @@
 // Intizar Digital Library - Enhanced Frontend Logic
 // Version 2.0 - Enhanced with Surah animation and advanced features
 
+// ==================== HELPER FUNCTIONS ====================
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 // ==================== SURAH LOADING ANIMATION ====================
 
 function initSurahAnimation() {
@@ -14,8 +23,8 @@ function initSurahAnimation() {
     
     let bismillahIndex = 0;
     let surahIndex = 0;
-    const bismillahSpeed = 50; // ms per character
-    const surahSpeed = 30; // ms per character
+    const bismillahSpeed = 20; // REDUCED FROM 50ms to 20ms per character
+    const surahSpeed = 10; // REDUCED FROM 30ms to 10ms per character
     
     function typeBismillah() {
         if (bismillahIndex < bismillah.length) {
@@ -24,8 +33,8 @@ function initSurahAnimation() {
             bismillahEl.style.opacity = 1;
             setTimeout(typeBismillah, bismillahSpeed);
         } else {
-            // Wait 500ms then start Surah
-            setTimeout(typeSurah, 500);
+            // Wait 200ms then start Surah (reduced from 500ms)
+            setTimeout(typeSurah, 200);
         }
     }
     
@@ -36,15 +45,15 @@ function initSurahAnimation() {
             surahEl.style.opacity = Math.min(1, surahIndex / 100);
             setTimeout(typeSurah, surahSpeed);
         } else {
-            // Animation complete
+            // Animation complete - faster fade out
             setTimeout(() => {
                 overlay.style.opacity = 0;
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     // Trigger callback if exists
                     if (window.onSurahComplete) window.onSurahComplete();
-                }, 500);
-            }, 1000);
+                }, 200); // Reduced from 500ms
+            }, 300); // Reduced from 1000ms
         }
     }
     
@@ -525,10 +534,10 @@ function renderFeaturedDocuments(docs) {
             card.innerHTML = `
                 <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
                 <div class="doc-info">
-                    <h4>${doc.title}</h4>
-                    <p class="doc-meta">Marubuci: ${doc.author} | Nau'i: ${doc.type}</p>
+                    <h4>${escapeHtml(doc.title)}</h4>
+                    <p class="doc-meta">Marubuci: ${escapeHtml(doc.author)} | Nau'i: ${doc.type}</p>
                     <p class="doc-date">${doc.dateFormatted}</p>
-                    ${doc.description ? `<p class="doc-description">${doc.description}</p>` : ''}
+                    ${doc.description ? `<p class="doc-description">${escapeHtml(doc.description)}</p>` : ''}
                 </div>
                 <div class="doc-actions">
                     <button class="doc-btn view-details" data-id="${doc.id}">
@@ -542,15 +551,8 @@ function renderFeaturedDocuments(docs) {
             dom.featuredDocuments.appendChild(card);
         });
         
-        // Add event listeners
-        setTimeout(() => {
-            document.querySelectorAll('.view-details').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const bookId = e.target.closest('.view-details').dataset.id;
-                    showBookDetails(bookId);
-                });
-            });
-        }, 100);
+        // Add event listeners directly
+        attachViewDetailsListeners();
         return;
     }
     
@@ -560,10 +562,10 @@ function renderFeaturedDocuments(docs) {
         card.innerHTML = `
             <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
             <div class="doc-info">
-                <h4>${doc.title}</h4>
-                <p class="doc-meta">Marubuci: ${doc.author} | Nau'i: ${doc.type}</p>
+                <h4>${escapeHtml(doc.title)}</h4>
+                <p class="doc-meta">Marubuci: ${escapeHtml(doc.author)} | Nau'i: ${doc.type}</p>
                 <p class="doc-date">An ƙara: ${doc.date}</p>
-                ${doc.description ? `<p class="doc-description">${doc.description}</p>` : ''}
+                ${doc.description ? `<p class="doc-description">${escapeHtml(doc.description)}</p>` : ''}
             </div>
             <div class="doc-actions">
                 <button class="doc-btn view-details" data-id="${doc.id}">
@@ -577,15 +579,8 @@ function renderFeaturedDocuments(docs) {
         dom.featuredDocuments.appendChild(card);
     });
     
-    // Add event listeners
-    setTimeout(() => {
-        document.querySelectorAll('.view-details').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const bookId = e.target.closest('.view-details').dataset.id;
-                showBookDetails(bookId);
-            });
-        });
-    }, 100);
+    // Add event listeners directly
+    attachViewDetailsListeners();
 }
 
 // ==================== LIBRARY FUNCTIONS ====================
@@ -850,7 +845,7 @@ function updateFilterCount(count) {
         const totalBooks = APP.defaultDocs.length + APP.externalDocs.length + APP.allDocuments.length;
         dom.filterCount.innerHTML = `
             An samo <strong>${count}</strong> daga cikin <strong>${totalBooks}</strong> littattafai
-            ${APP.filters.search ? `don "<em>${APP.filters.search}</em>"` : ''}
+            ${APP.filters.search ? `don "<em>${escapeHtml(APP.filters.search)}</em>"` : ''}
         `;
     }
 }
@@ -929,7 +924,7 @@ function renderLibraryDocuments(docs) {
         
         // Get cover image or icon
         const coverHtml = doc.coverImage ? 
-            `<img src="${doc.coverImage}" alt="${doc.title}" class="doc-cover-img">` :
+            `<img src="${doc.coverImage}" alt="${escapeHtml(doc.title)}" class="doc-cover-img">` :
             `<i class="fas fa-file-pdf pdf-icon"></i>`;
         
         // Get metadata badges
@@ -943,9 +938,9 @@ function renderLibraryDocuments(docs) {
                 <span class="doc-badge">${doc.source === 'external' ? 'Hanyar Yanar Gizo' : 'Littafin Asali'}</span>
             </div>
             <div class="card-body">
-                <h4>${doc.title}</h4>
-                <p class="card-author">${doc.author}</p>
-                <p class="card-excerpt">${doc.description ? doc.description.substring(0, 120) + '...' : 'Babu bayani.'}</p>
+                <h4>${escapeHtml(doc.title || 'Untitled')}</h4>
+                <p class="card-author">${escapeHtml(doc.author || 'Unknown')}</p>
+                <p class="card-excerpt">${doc.description ? escapeHtml(doc.description.substring(0, 120)) + '...' : 'Babu bayani.'}</p>
                 <div class="card-meta">
                     <span class="meta-tag">${languageName}</span>
                     <span class="meta-tag">${categoryName}</span>
@@ -972,38 +967,68 @@ function renderLibraryDocuments(docs) {
         dom.libraryDocuments.appendChild(card);
     });
     
-    // Add event listeners to view buttons
-    setTimeout(() => {
-        document.querySelectorAll('.view-details').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const bookId = e.target.closest('.view-details').dataset.id;
+    // Add event listeners directly
+    attachViewDetailsListeners();
+}
+
+// ==================== ATTACH VIEW DETAILS LISTENERS ====================
+
+function attachViewDetailsListeners() {
+    // Get all view-details buttons in the document
+    const viewButtons = document.querySelectorAll('.view-details');
+    
+    viewButtons.forEach(button => {
+        // Remove any existing listeners to prevent duplicates
+        button.replaceWith(button.cloneNode(true));
+    });
+    
+    // Re-select the buttons (the cloned ones)
+    const newButtons = document.querySelectorAll('.view-details');
+    
+    newButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const bookId = this.dataset.id;
+            console.log('View button clicked for book ID:', bookId);
+            if (bookId) {
                 showBookDetails(bookId);
-            });
+            }
         });
-    }, 100);
+    });
 }
 
 // ==================== BOOK DETAILS MODAL ====================
 
 function showBookDetails(bookId) {
-    // Find the book
+    console.log('showBookDetails called with ID:', bookId);
+    
+    // Find the book in all data sources
     const allBooks = [...APP.defaultDocs, ...APP.externalDocs, ...APP.allDocuments];
+    console.log('Searching in', allBooks.length, 'books');
+    
     const book = allBooks.find(b => b.id === bookId);
     
     if (!book) {
+        console.error('Book not found:', bookId);
         showNotification('Babu bayanin littafin da aka samo.', 'error');
         return;
     }
+    
+    console.log('Found book:', book.title);
     
     // Create modal if it doesn't exist
     if (!dom.detailsModal) {
         dom.detailsModal = document.createElement('div');
         dom.detailsModal.className = 'details-modal hidden';
+        dom.detailsModal.setAttribute('role', 'dialog');
+        dom.detailsModal.setAttribute('aria-modal', 'true');
+        dom.detailsModal.setAttribute('aria-label', 'Cikakken Bayanin Littafi');
         dom.detailsModal.innerHTML = `
             <div class="details-content">
                 <div class="details-header">
                     <h3>Cikakken Bayanin Littafi</h3>
-                    <button class="details-close">&times;</button>
+                    <button class="details-close" aria-label="Rufe">&times;</button>
                 </div>
                 <div class="details-body" id="details-body">
                     <!-- Content will be added here -->
@@ -1015,12 +1040,14 @@ function showBookDetails(bookId) {
         // Add close event
         dom.detailsModal.querySelector('.details-close').addEventListener('click', () => {
             dom.detailsModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
         });
         
         // Close when clicking outside
         dom.detailsModal.addEventListener('click', (e) => {
             if (e.target === dom.detailsModal) {
                 dom.detailsModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
             }
         });
     }
@@ -1031,58 +1058,79 @@ function showBookDetails(bookId) {
     const categoryName = getCategoryDisplayName(book.category);
     const sourceName = getSourceDisplayName(book.source);
     
+    // Determine the main action based on file type
+    const isExternal = book.type === 'WEB' || book.source === 'external';
+    const actionText = isExternal ? 'Duba akan Yanar Gizo' : 'Karanta PDF';
+    const actionIcon = isExternal ? 'fa-external-link-alt' : 'fa-book-open';
+    const fileUrl = book.url || '#';
+    
     detailsBody.innerHTML = `
-        <div style="display: flex; gap: 20px; margin-bottom: 2rem; align-items: flex-start;">
+        <div style="display: flex; gap: 20px; margin-bottom: 2rem; align-items: flex-start; flex-wrap: wrap;">
             ${book.coverImage ? 
-                `<img src="${book.coverImage}" alt="${book.title}" 
+                `<img src="${book.coverImage}" alt="${escapeHtml(book.title)}" 
                       style="width: 120px; height: 160px; object-fit: cover; border-radius: 8px; border: 2px solid #ddd;">` : 
-                `<div style="width: 120px; height: 160px; background: #f0f7f4; border-radius: 8px; 
+                `<div style="width: 120px; height: 160px; background: linear-gradient(135deg, #f0f7f4, #e0eee8); border-radius: 8px; 
                            display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #13614a;">
                     <i class="fas fa-book"></i>
                 </div>`
             }
-            <div style="flex: 1;">
-                <h2 style="color: var(--primary-dark); margin-bottom: 10px;">${book.title}</h2>
-                <p style="color: #666; margin-bottom: 15px;"><strong>Marubuci:</strong> ${book.author}</p>
+            <div style="flex: 1; min-width: 250px;">
+                <h2 style="color: var(--primary-dark); margin-bottom: 10px; font-size: 1.5rem;">${escapeHtml(book.title || 'Untitled')}</h2>
+                <p style="color: #666; margin-bottom: 15px;"><strong>Marubuci:</strong> ${escapeHtml(book.author || 'Unknown')}</p>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <span class="meta-tag">${languageName}</span>
                     <span class="meta-tag">${categoryName}</span>
                     <span class="meta-tag">${sourceName}</span>
-                    <span class="meta-tag">${book.type}</span>
+                    <span class="meta-tag">${book.type || 'PDF'}</span>
                 </div>
             </div>
         </div>
         
         <div style="margin-bottom: 2rem;">
-            <h3 style="color: var(--primary-dark); margin-bottom: 10px;">Bayanin Littafi</h3>
-            <p style="line-height: 1.6; color: #444;">${book.description || 'Babu bayani.'}</p>
+            <h3 style="color: var(--primary-dark); margin-bottom: 10px; font-size: 1.2rem;">Bayanin Littafi</h3>
+            <p style="line-height: 1.6; color: #444;">${escapeHtml(book.description || 'Babu bayani.')}</p>
         </div>
         
         ${book.externalLink ? `
             <div style="margin-bottom: 1.5rem;">
-                <h3 style="color: var(--primary-dark); margin-bottom: 10px;">Hanyar Yanar Gizo</h3>
-                <a href="${book.externalLink}" target="_blank" style="color: #13614a; text-decoration: underline;">
+                <h3 style="color: var(--primary-dark); margin-bottom: 10px; font-size: 1.2rem;">Hanyar Yanar Gizo</h3>
+                <a href="${book.externalLink}" target="_blank" style="color: #13614a; text-decoration: underline; word-break: break-all;">
                     ${book.externalLink}
                 </a>
             </div>
         ` : ''}
         
+        <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+            <h3 style="color: var(--primary-dark); margin-bottom: 10px; font-size: 1.1rem;">Bayanin Ƙara</h3>
+            <p style="color: #666; margin: 5px 0;"><strong>Ranar Ƙara:</strong> ${book.dateFormatted || book.date || 'Unknown'}</p>
+            <p style="color: #666; margin: 5px 0;"><strong>ID:</strong> ${book.id || 'N/A'}</p>
+        </div>
+        
         <div class="details-actions">
-            <a href="${book.url}" ${book.type === 'WEB' ? 'target="_blank"' : ''} 
+            <a href="${fileUrl}" ${isExternal ? 'target="_blank"' : ''} 
                class="btn btn-primary" style="flex: 1;">
-                <i class="${book.type === 'WEB' ? 'fas fa-external-link-alt' : 'fas fa-book-open'}"></i>
-                ${book.type === 'WEB' ? 'Duba akan Yanar Gizo' : 'Fara Karatu'}
+                <i class="fas ${actionIcon}"></i>
+                ${actionText}
             </a>
-            ${book.type !== 'WEB' ? 
-                `<a href="${book.url}" download class="btn btn-secondary" style="flex: 1;">
+            ${!isExternal ? 
+                `<a href="${fileUrl}" download class="btn btn-secondary" style="flex: 1;">
                     <i class="fas fa-download"></i> Zazzage PDF
                 </a>` : ''
             }
         </div>
     `;
     
-    // Show modal
+    // Show modal with animation
     dom.detailsModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    
+    // Force a reflow to ensure animation works
+    setTimeout(() => {
+        dom.detailsModal.style.opacity = '1';
+        // Focus on close button for accessibility
+        const closeBtn = dom.detailsModal.querySelector('.details-close');
+        if (closeBtn) closeBtn.focus();
+    }, 10);
 }
 
 // ==================== AI CHAT FUNCTIONS ====================
@@ -1108,7 +1156,7 @@ function addMessage(text, isUser = false) {
                 <i class="fas fa-user"></i>
                 <span>You</span>
             </div>
-            <p>${text}</p>
+            <p>${escapeHtml(text)}</p>
         `;
     } else {
         messageDiv.innerHTML = `
@@ -1116,7 +1164,7 @@ function addMessage(text, isUser = false) {
                 <i class="fas fa-robot"></i>
                 <span>Mahdawiyyah Assistant</span>
             </div>
-            <p>${text}</p>
+            <p>${escapeHtml(text)}</p>
         `;
     }
     
@@ -1127,7 +1175,7 @@ function addMessage(text, isUser = false) {
 async function sendAIQuestion() {
     // Check network connectivity
     if (!navigator.onLine) {
-        addMessage('You appear to be offline. Please check your connection and try again.');
+        addMessage('You appear to be offline. Please check your internet connection and try again.', false);
         return;
     }
     
@@ -1138,14 +1186,17 @@ async function sendAIQuestion() {
     addMessage(question, true);
     dom.userInput.value = '';
     dom.sendAI.disabled = true;
-    dom.sendAI.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    dom.sendAI.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ana aikawa...';
     
     try {
         console.log('🤖 Sending AI question:', question.substring(0, 100));
         
         const response = await fetch(APP.backendUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+            },
             body: `action=ai&input=${encodeURIComponent(question)}`
         });
         
@@ -1154,13 +1205,19 @@ async function sendAIQuestion() {
             const errorText = await response.text();
             console.error('❌ Server error:', response.status, errorText);
             
+            let errorMessage = 'Sorry, there was an error processing your request. ';
+            
             if (response.status === 401 || response.status === 403) {
-                addMessage('Session expired. Please refresh the page and try again.');
+                errorMessage = 'Session expired. Please refresh the page and try again.';
             } else if (response.status === 429) {
-                addMessage('Too many requests. Please wait a moment before trying again.');
+                errorMessage = 'Too many requests. Please wait a moment before trying again.';
+            } else if (response.status >= 500) {
+                errorMessage = 'Server is currently unavailable. Please try again later.';
             } else {
-                addMessage(`Server error (${response.status}). Please try again.`);
+                errorMessage = `Error (${response.status}). Please try again.`;
             }
+            
+            addMessage(errorMessage, false);
             return;
         }
         
@@ -1168,23 +1225,28 @@ async function sendAIQuestion() {
         console.log('📥 AI response received:', result.success ? 'Success' : 'Failed');
         
         if (result.success) {
-            addMessage(result.response);
+            addMessage(result.response, false);
         } else {
             // Show user-friendly error
             const errorMsg = result.error || 'AI service is currently unavailable';
-            addMessage(`Sorry, I couldn't process that request. ${errorMsg}`);
-            
-            // Suggest if question is off-topic
-            if (errorMsg.includes('not appear to be related')) {
-                addMessage('Tip: Ask about Imam Mahdi (AJF), Mahdawiyyah, Intizar (awaiting), or Sayyid Zakzaky\'s teachings.');
-            }
+            addMessage(`Sorry, I couldn't process that request. ${errorMsg}`, false);
         }
     } catch (error) {
         console.error('❌ Network error:', error);
-        addMessage('Network error. Please check your internet connection and try again.');
+        
+        let errorMessage = 'Network error. ';
+        if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+            errorMessage += 'The request timed out. Please try again.';
+        } else if (error.name === 'TypeError') {
+            errorMessage += 'Cannot connect to server. Please check your internet connection.';
+        } else {
+            errorMessage += error.message;
+        }
+        
+        addMessage(errorMessage, false);
     } finally {
         dom.sendAI.disabled = false;
-        dom.sendAI.innerHTML = 'Send <i class="fas fa-paper-plane"></i>';
+        dom.sendAI.innerHTML = 'Aika <i class="fas fa-paper-plane"></i>';
     }
 }
 
@@ -1240,7 +1302,7 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
-        <span>${message}</span>
+        <span>${escapeHtml(message)}</span>
         <button onclick="this.parentElement.remove()">&times;</button>
     `;
     
@@ -1348,6 +1410,7 @@ function initEventListeners() {
             }
             if (dom.detailsModal && !dom.detailsModal.classList.contains('hidden')) {
                 dom.detailsModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
             }
         }
     });
@@ -1691,30 +1754,46 @@ function addDynamicStyles() {
             background: #d8b085;
         }
         
-        /* Book details modal */
+        /* Enhanced modal styles */
         .details-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1002;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
             padding: 20px;
+            overflow: auto;
+        }
+        
+        .details-modal:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
         }
         
         .details-content {
-            background: var(--white);
-            border-radius: var(--radius);
+            background: white;
+            border-radius: 12px;
             width: 100%;
-            max-width: 600px;
-            max-height: 80vh;
+            max-width: 700px;
+            max-height: 85vh;
             overflow-y: auto;
             padding: 2rem;
-            animation: slideDown 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .details-modal:not(.hidden) .details-content {
+            transform: translateY(0);
         }
         
         .details-header {
@@ -1746,6 +1825,12 @@ function addDynamicStyles() {
             margin-top: 2rem;
             padding-top: 1.5rem;
             border-top: 2px solid #f0f7f4;
+        }
+        
+        /* Focus management for accessibility */
+        .details-close:focus {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
         }
         
         /* Surah animation styles */
