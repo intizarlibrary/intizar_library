@@ -1,6 +1,6 @@
 /**
  * Intizar Digital Library - Admin Authentication & Management
- * UPDATED VERSION - Enhanced with Surah loading and multi-language support
+ * UPDATED VERSION - Enhanced with Surah loading, dropdown support, and faster animation
  */
 
 // Configuration - UPDATED WITH NEW URL!
@@ -22,6 +22,18 @@ const ADMIN = {
 // DOM Elements Storage
 const adminDom = {};
 
+// ==================== FORM VALIDATION HELPERS ====================
+// Helper function for form validation
+function validateCategory(category) {
+    const validCategories = ['history', 'ideology', 'articles', 'lists', 'biography', 'sermons', 'mujalla', 'other'];
+    return validCategories.includes(category);
+}
+
+function validateLanguage(language) {
+    const validLanguages = ['hausa', 'english', 'arabic', 'other'];
+    return validLanguages.includes(language);
+}
+
 // ==================== SURAH LOADING ANIMATION ====================
 
 function initSurahAnimation() {
@@ -35,8 +47,8 @@ function initSurahAnimation() {
     
     let bismillahIndex = 0;
     let surahIndex = 0;
-    const bismillahSpeed = 50; // ms per character
-    const surahSpeed = 30; // ms per character
+    const bismillahSpeed = 20; // REDUCED FROM 50ms to 20ms per character (2.5x faster)
+    const surahSpeed = 10; // REDUCED FROM 30ms to 10ms per character (3x faster)
     
     function typeBismillah() {
         if (bismillahIndex < bismillah.length) {
@@ -45,8 +57,8 @@ function initSurahAnimation() {
             bismillahEl.style.opacity = 1;
             setTimeout(typeBismillah, bismillahSpeed);
         } else {
-            // Wait 500ms then start Surah
-            setTimeout(typeSurah, 200);
+            // Wait 100ms then start Surah (reduced from 200ms)
+            setTimeout(typeSurah, 100);
         }
     }
     
@@ -57,15 +69,15 @@ function initSurahAnimation() {
             surahEl.style.opacity = Math.min(1, surahIndex / 100);
             setTimeout(typeSurah, surahSpeed);
         } else {
-            // Animation complete
+            // Animation complete - faster fade out
             setTimeout(() => {
                 overlay.style.opacity = 0;
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     // Trigger callback if exists
                     if (window.onSurahComplete) window.onSurahComplete();
-                }, 200);
-            }, 500);
+                }, 100); // Reduced from 200ms
+            }, 200); // Reduced from 500ms
         }
     }
     
@@ -146,6 +158,8 @@ function loadElements() {
     adminDom.uploadForm = document.getElementById('upload-form');
     adminDom.uploadTitle = document.getElementById('upload-title');
     adminDom.uploadAuthor = document.getElementById('upload-author');
+    adminDom.uploadLanguage = document.getElementById('upload-language');
+    adminDom.uploadCategory = document.getElementById('upload-category');
     adminDom.uploadFile = document.getElementById('upload-file');
     adminDom.uploadSubmit = document.getElementById('upload-submit');
     adminDom.uploadStatus = document.getElementById('upload-status');
@@ -154,6 +168,8 @@ function loadElements() {
     adminDom.generateForm = document.getElementById('generate-form');
     adminDom.generateTitle = document.getElementById('generate-title');
     adminDom.generateAuthor = document.getElementById('generate-author');
+    adminDom.generateLanguage = document.getElementById('generate-language');
+    adminDom.generateCategory = document.getElementById('generate-category');
     adminDom.generateContent = document.getElementById('generate-content');
     adminDom.generateSubmit = document.getElementById('generate-submit');
     adminDom.generateStatus = document.getElementById('generate-status');
@@ -320,13 +336,13 @@ async function handleUpload(event) {
         return;
     }
     
-    // Collect all form data
+    // Collect all form data - UPDATED FOR DROPDOWNS
     const formData = {
         title: document.getElementById('upload-title').value.trim(),
         author: document.getElementById('upload-author').value.trim(),
         description: document.getElementById('upload-description').value.trim(),
-        language: document.querySelector('input[name="language"]:checked').value,
-        category: document.getElementById('upload-category').value,
+        language: document.getElementById('upload-language').value, // FROM DROPDOWN
+        category: document.getElementById('upload-category').value, // FROM DROPDOWN
         source: document.querySelector('input[name="source"]:checked').value,
         externalLink: document.getElementById('upload-external').value.trim(),
         coverImage: document.getElementById('upload-cover').files[0],
@@ -339,10 +355,20 @@ async function handleUpload(event) {
     // Required fields
     if (!formData.title) errors.push("Sunan littafi ya zama dole");
     if (!formData.author) errors.push("Sunan marubuci ya zama dole");
-    if (!formData.category) errors.push("Zaɓi rukuni");
+    if (!formData.category) errors.push("Zaɓi rukuni (Select category)");
     if (!formData.language) errors.push("Zaɓi harshe");
     if (!formData.source) errors.push("Zaɓi tushe");
     if (!formData.mainFile) errors.push("Fayil ya zama dole");
+    
+    // Category validation
+    if (formData.category && !validateCategory(formData.category)) {
+        errors.push("Rukunin da aka zaɓa ba shi da inganci (Selected category is invalid)");
+    }
+    
+    // Language validation
+    if (formData.language && !validateLanguage(formData.language)) {
+        errors.push("Harshen da aka zaɓa ba shi da inganci (Selected language is invalid)");
+    }
     
     // File type validation
     if (formData.mainFile) {
@@ -394,7 +420,7 @@ async function handleUpload(event) {
         // Convert main file to base64
         const fileBase64 = await fileToBase64(formData.mainFile);
         
-        // Prepare payload for backend
+        // Prepare payload for backend - UPDATED FOR DROPDOWNS
         const payload = new URLSearchParams();
         payload.append('action', 'upload');
         payload.append('token', ADMIN.token);
@@ -404,8 +430,8 @@ async function handleUpload(event) {
         payload.append('title', formData.title);
         payload.append('author', formData.author);
         payload.append('description', formData.description);
-        payload.append('language', formData.language);
-        payload.append('category', formData.category);
+        payload.append('language', formData.language); // FROM DROPDOWN
+        payload.append('category', formData.category); // FROM DROPDOWN
         payload.append('source', formData.source);
         if (formData.externalLink) payload.append('externalLink', formData.externalLink);
         if (coverBase64) {
@@ -431,6 +457,9 @@ async function handleUpload(event) {
             
             // Clear form
             adminDom.uploadForm.reset();
+            // Reset dropdowns to defaults
+            document.getElementById('upload-category').value = 'ideology';
+            document.getElementById('upload-language').value = 'hausa';
             document.getElementById('file-preview').classList.add('hidden');
             document.getElementById('cover-preview').classList.add('hidden');
             
@@ -494,21 +523,40 @@ async function handleGeneratePDF(event) {
         return;
     }
     
-    // Collect all form data
+    // Collect all form data - UPDATED FOR DROPDOWNS
     const formData = {
         title: document.getElementById('generate-title').value.trim(),
         author: document.getElementById('generate-author').value.trim(),
         content: document.getElementById('generate-content').value.trim(),
         description: document.getElementById('generate-description')?.value.trim() || '',
-        language: document.querySelector('input[name="gen-language"]:checked')?.value || 'english',
-        category: document.getElementById('generate-category')?.value || 'articles',
+        language: document.getElementById('generate-language').value, // FROM DROPDOWN
+        category: document.getElementById('generate-category')?.value || 'articles', // FROM DROPDOWN
         source: document.querySelector('input[name="gen-source"]:checked')?.value || 'intizar',
         externalLink: document.getElementById('generate-external')?.value.trim() || ''
     };
     
     // Validation
-    if (!formData.title || !formData.author || !formData.content) {
-        showNotification('Please fill all required fields', 'error');
+    const errors = [];
+    
+    // Required fields
+    if (!formData.title) errors.push("Sunan PDF ya zama dole");
+    if (!formData.author) errors.push("Sunan marubuci ya zama dole");
+    if (!formData.content) errors.push("Abun ciki ya zama dole");
+    if (!formData.category) errors.push("Zaɓi rukuni");
+    if (!formData.language) errors.push("Zaɓi harshe");
+    
+    // Category validation
+    if (formData.category && !validateCategory(formData.category)) {
+        errors.push("Rukunin da aka zaɓa ba shi da inganci (Selected category is invalid)");
+    }
+    
+    // Language validation
+    if (formData.language && !validateLanguage(formData.language)) {
+        errors.push("Harshen da aka zaɓa ba shi da inganci (Selected language is invalid)");
+    }
+    
+    if (errors.length > 0) {
+        showNotification(errors.join('<br>'), 'error');
         return;
     }
     
@@ -519,7 +567,7 @@ async function handleGeneratePDF(event) {
     try {
         console.log('📄 Generating PDF:', formData.title);
         
-        // Prepare payload
+        // Prepare payload - UPDATED FOR DROPDOWNS
         const payload = new URLSearchParams();
         payload.append('action', 'generatePdf');
         payload.append('token', ADMIN.token);
@@ -527,8 +575,8 @@ async function handleGeneratePDF(event) {
         payload.append('author', formData.author);
         payload.append('content', formData.content);
         payload.append('description', formData.description);
-        payload.append('language', formData.language);
-        payload.append('category', formData.category);
+        payload.append('language', formData.language); // FROM DROPDOWN
+        payload.append('category', formData.category); // FROM DROPDOWN
         payload.append('source', formData.source);
         if (formData.externalLink) payload.append('externalLink', formData.externalLink);
         
@@ -550,6 +598,9 @@ async function handleGeneratePDF(event) {
             
             // Clear form
             adminDom.generateForm.reset();
+            // Reset dropdowns to defaults
+            document.getElementById('generate-category').value = 'articles';
+            document.getElementById('generate-language').value = 'hausa';
             
             // Reload documents
             await loadDocuments();
@@ -605,8 +656,16 @@ async function handleLogout() {
         
         // Reset forms
         if (adminDom.loginForm) adminDom.loginForm.reset();
-        if (adminDom.uploadForm) adminDom.uploadForm.reset();
-        if (adminDom.generateForm) adminDom.generateForm.reset();
+        if (adminDom.uploadForm) {
+            adminDom.uploadForm.reset();
+            document.getElementById('upload-category').value = 'ideology';
+            document.getElementById('upload-language').value = 'hausa';
+        }
+        if (adminDom.generateForm) {
+            adminDom.generateForm.reset();
+            document.getElementById('generate-category').value = 'articles';
+            document.getElementById('generate-language').value = 'hausa';
+        }
         
         // Show login screen
         showLogin();
@@ -746,6 +805,7 @@ function getCategoryDisplayName(code) {
         'lists': 'Jerin',
         'biography': 'Tarihin Rayuwa',
         'sermons': 'Wa\'azi',
+        'mujalla': 'Mujalla (Magazine)', // ADDED
         'other': 'Sauran'
     };
     return categories[code] || code;
@@ -1000,12 +1060,35 @@ function initEventListeners() {
         uploadResetBtn.addEventListener('click', () => {
             if (adminDom.uploadForm) {
                 adminDom.uploadForm.reset();
+                // Reset dropdowns to defaults
+                document.getElementById('upload-category').value = 'ideology';
+                document.getElementById('upload-language').value = 'hausa';
                 document.getElementById('file-preview').classList.add('hidden');
                 document.getElementById('cover-preview').classList.add('hidden');
                 if (adminDom.uploadStatus) adminDom.uploadStatus.innerHTML = '';
                 showNotification('Form cleared', 'info');
             }
         });
+    }
+    
+    // Initialize dropdown defaults
+    const uploadCategory = document.getElementById('upload-category');
+    const generateCategory = document.getElementById('generate-category');
+    const uploadLanguage = document.getElementById('upload-language');
+    const generateLanguage = document.getElementById('generate-language');
+    
+    // Set default values if not already set
+    if (uploadCategory && !uploadCategory.value) {
+        uploadCategory.value = 'ideology'; // Default category
+    }
+    if (generateCategory && !generateCategory.value) {
+        generateCategory.value = 'articles'; // Default category
+    }
+    if (uploadLanguage && !uploadLanguage.value) {
+        uploadLanguage.value = 'hausa'; // Default language
+    }
+    if (generateLanguage && !generateLanguage.value) {
+        generateLanguage.value = 'hausa'; // Default language
     }
     
     // File preview for upload
@@ -1367,4 +1450,4 @@ window.handleLogin = handleLogin;
 window.handleLogout = handleLogout;
 window.loadDocuments = loadDocuments;
 window.handleUpload = handleUpload;
-window.handleGeneratePDF = handleGeneratePDF;;
+window.handleGeneratePDF = handleGeneratePDF;
