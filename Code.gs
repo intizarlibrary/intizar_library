@@ -1,5 +1,5 @@
-// Intizar Digital Library - Google Apps Script Backend v4.1
-// Enhanced Mahdawiyyah-focused version
+// Intizar Digital Library - Google Apps Script Backend v4.2
+// Enhanced Mahdawiyyah-focused version with clean AI prompt
 
 const CONFIG = {
   GEMINI_API_KEY: PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY'),
@@ -13,7 +13,7 @@ const CONFIG = {
 };
 
 const VALID_LANGUAGES = ['hausa', 'english', 'arabic', 'other'];
-const VALID_CATEGORIES = ['history', 'ideology', 'articles', 'lists', 'biography', 'sermons', 'other'];
+const VALID_CATEGORIES = ['history', 'ideology', 'articles', 'lists', 'biography', 'sermons', 'mujalla', 'other'];
 const VALID_SOURCES = ['intizar', 'individual', 'external'];
 
 const MAHDAWIYYAH_KEYWORDS = [
@@ -60,7 +60,7 @@ const MAHDAWIYYAH_KEYWORDS = [
   'zakzaky', 'sheikh ibrahim zakzaky', 'sheikh zakzaky', 'sayyid zakzaky',
   'khomeini', 'imam khomeini', 'ayatollah khomeini', 'ruhollah khomeini',
   'khamenei', 'sayyid khamenei', 'ayatollah khamenei', 'ali khamenei',
-  'bahajati', 'allamah bahajati', 'allamah bahajatiy', 'bahajatiy', // Added as requested
+  'bahajati', 'allamah bahajati', 'allamah bahajatiy', 'bahajatiy',
   'shirazi', 'sayyid sadiq shirazi', 'grand ayatollah shirazi',
   'sistani', 'sayyid sistani', 'ayatollah sistani',
   'shariatmadari', 'ayatollah shariatmadari',
@@ -220,60 +220,6 @@ function makeFilePublic(fileId) {
   }
 }
 
-function isMahdawiyyahRelated(text) {
-  if (!text || text.trim().length < 3) return false;
-  
-  const lower = text.toLowerCase().trim();
-  
-  // Direct keyword matching
-  for (let i = 0; i < MAHDAWIYYAH_KEYWORDS.length; i++) {
-    if (lower.includes(MAHDAWIYYAH_KEYWORDS[i].toLowerCase())) {
-      return true;
-    }
-  }
-  
-  // Check for advocates
-  const advocates = ['zakzaky', 'khomeini', 'khamenei', 'bahajati', 'bahajatiy', 'shirazi', 'sistani', 'montazeri'];
-  for (let i = 0; i < advocates.length; i++) {
-    if (lower.includes(advocates[i])) {
-      return true;
-    }
-  }
-  
-  // Enhanced detection for Islamic terms
-  const islamicTerms = ['imam', 'mahdi', 'prophet', 'islam', 'quran', 'hadith', 'shia', 'sunni'];
-  let islamicTermCount = 0;
-  for (let i = 0; i < islamicTerms.length; i++) {
-    if (lower.includes(islamicTerms[i])) {
-      islamicTermCount++;
-    }
-  }
-  
-  // If multiple Islamic terms present, likely related
-  if (islamicTermCount >= 2) {
-    return true;
-  }
-  
-  // Question patterns about Islamic leadership
-  const questionPatterns = [
-    /who is.*imam/i,
-    /what is.*mahdi/i,
-    /explain.*ghaybah/i,
-    /tell me about.*zakzaky/i,
-    /me.*game da.*imam/i,
-    /ما هو.*المهدي/i,
-    /من هو.*الإمام/i
-  ];
-  
-  for (let i = 0; i < questionPatterns.length; i++) {
-    if (questionPatterns[i].test(lower)) {
-      return true;
-    }
-  }
-  
-  return false;
-}
-
 function escapeHtml(text) {
   if (!text) return '';
   return text
@@ -374,44 +320,33 @@ function callGeminiAPI(prompt) {
     throw new Error('Gemini API key not configured. Set GEMINI_API_KEY in Script Properties.');
   }
 
-  const detectedLanguage = detectLanguage(prompt);
-  
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.AI_MODEL}:generateContent`;
   
-  // ENHANCED PROMPT WITHOUT META VALIDATION
-  const enhancedPrompt = `You are an expert scholar on Mahdawiyyah (the doctrine of Imam Mahdi AJF) at Intizar Digital Library. 
+  // CLEAN, NON-REDUNDANT PROMPT
+  const enhancedPrompt = `You are a knowledgeable and respectful Islamic teaching assistant grounded in the teachings of Ahlulbait (AS), with strong expertise in Mahdawiyyah doctrine. Your primary audience is Hausa-speaking users, but you must automatically detect the user's language and respond in that same language, using Hausa by default when no language is clear.
+Your role is to teach, explain, and clarify Islamic beliefs related to Imam Mahdi (AS), Mahdawiyyah, Qur'an, Hadith, Islamic history, and the advocates and proponents of Mahdawiyyah, while also fairly presenting other Islamic and religious perspectives when relevant. You must answer such questions directly, politely, and without avoidance, even when they are sensitive or doctrinal.
+You must always respond courteously. When greeted with "Salaam" or "Salaam Alaikum," reply with "Wa alaikumus salaam wa rahmatullahi wa barakatuh." When greeted with "Hi" or "Hello," respond naturally and politely before continuing. Your tone should reflect wisdom, calm scholarship, and a teaching spirit, with the aim of increasing understanding rather than debate or hostility.
 
-RESPONSE LANGUAGE: ${detectedLanguage === 'ar' ? 'Respond in clear classical Arabic.' : detectedLanguage === 'en' ? 'Respond in English.' : 'Respond in simple everyday Hausa.'}
+CRITICAL INSTRUCTIONS:
+1. Detect the user's language from their question and respond in the SAME LANGUAGE
+2. Use plain text only - NO MARKDOWN (no *, #, -, _, **, __, etc.)
+3. Always use (AJF) after mentioning Imam Mahdi
+4. If the question is NOT related to Mahdawiyyah/Imam Mahdi, respond politely: "I specialize in Mahdawiyyah topics. Do you have a question about Imam Mahdi (AJF) or Mahdawiyyah doctrine?"
+5. Stay focused on your expertise while being respectful and helpful
 
-CORE INSTRUCTIONS:
-1. Respond ONLY in plain text without any markdown symbols (no asterisks, hashtags, underscores, or markdown).
-2. Focus comprehensively on Mahdawiyyah topics.
-3. Always use full honorifics: Imam Mahdi (عجل الله فرجه الشريف) or (AJF).
-4. Mention relevant nicknames of Imam Mahdi when discussing him.
-5. Include relevant Quran verses and Hadith with sources when appropriate.
-6. Reference teachings of Sheikh Zakzaky about awaiting.
-7. Mention works of Allamah Bahajatiy when relevant.
-8. Discuss the concept of Wilayat al-Faqih in relation to Mahdawiyyah.
-9. Explain the role of Intizar in contemporary times.
+YOUR EXPERTISE AREAS:
+- Imam Mahdi (AJF), his titles, and his role
+- Mahdawiyyah doctrine and teachings
+- Intizar (awaiting the Imam)
+- Sheikh Ibrahim Zakzaky's teachings
+- Allamah Bahajati's works
+- Islamic eschatology and end times
+- Ahlulbait (AS) teachings
+- Related Islamic history and theology
 
-MAHDAWIYYAH TOPICS TO COVER:
-- Imam Mahdi (AJF) - جميع ألقابه (صاحب الزمان، القائم، البقية، الحجة، الخ)
-- Intizar/الانتظار (awaiting the Imam) - Duties during occultation
-- Ghaybah/الغيبة (Occultation) - الصغرى والكبرى
-- Raj'ah/الرجعة (Return) - المفهوم والأدلة
-- Zuhur/الظهور (Reappearance) - العلامات والشروط
-- Mahdawiyyah advocates: Sheikh Ibraheem Zakzaky, Imam Khomeini, Sayyid Ali Khamenei, Allamah Bahajatiy
-- Islamic eschatology related to Imam Mahdi
-- Mahdawiyyah in Quran and Hadith
-- Signs of reappearance (علامات الظهور)
-- Ahlul Bayt teachings about Imam Mahdi
-- Historical accounts of Imam Mahdi
-- Philosophical aspects of awaiting
-- Social and political implications of Mahdawiyyah
+QUESTION FROM USER: ${prompt}
 
-Question: ${prompt}
-
-Provide a comprehensive, scholarly answer focusing on Mahdawiyyah.`;
+Remember: Detect language, respond in same language, be clear and helpful, focus on Mahdawiyyah topics.`;
   
   const payload = {
     contents: [{
@@ -485,13 +420,14 @@ function getLanguageDisplayName(code) {
 
 function getCategoryDisplayName(code) {
   const categories = {
-    'history': 'History (Tarihi)',
-    'ideology': 'Ideology (Akida)',
-    'articles': 'Articles (Kasidu)',
-    'lists': 'Lists (Jerin)',
-    'biography': 'Biography (Tarihin Rayuwa)',
-    'sermons': 'Sermons (Wa\'azi)',
-    'other': 'Others (Sauran)'
+    'history': 'Tarihi',
+    'ideology': 'Akida',
+    'articles': 'Kasidu',
+    'lists': 'Jerin',
+    'biography': 'Tarihin Rayuwa',
+    'sermons': 'Wa\'azi',
+    'mujalla': 'Mujalla',
+    'other': 'Sauran'
   };
   return categories[code] || code;
 }
@@ -585,10 +521,10 @@ function handleGetDocuments() {
 
 function handleAIRequest(userInput) {
   try {
-    if (!userInput || userInput.trim().length < 3) {
+    if (!userInput || userInput.trim().length < 2) {
       return {
         success: false,
-        error: 'Please enter a valid question (at least 3 characters).'
+        error: 'Please enter a question.'
       };
     }
     
@@ -601,19 +537,18 @@ function handleAIRequest(userInput) {
 
     console.log('AI Question received:', userInput.substring(0, 100));
     
-    const detectedLanguage = detectLanguage(userInput);
+    // Simple language detection for logging
+    const detectedLang = detectLanguage(userInput);
+    console.log('Detected language:', detectedLang);
     
-    // Check if question is Mahdawiyyah-related (but don't reject if not)
-    const isRelated = isMahdawiyyahRelated(userInput);
-    
+    // Call AI with clean prompt
     const aiResponse = callGeminiAPI(userInput);
 
     return {
       success: true,
       response: aiResponse,
       timestamp: new Date().toISOString(),
-      language: detectedLanguage,
-      isMahdawiyyahRelated: isRelated
+      detectedLanguage: detectedLang
     };
   } catch (e) {
     console.error('AI request error:', e);
@@ -913,12 +848,7 @@ function doGet(e) {
 
     return ContentService
       .createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      });
-
+      .setMimeType(ContentService.MimeType.JSON);
   } catch (error) {
     console.error('doGet error:', error);
     return ContentService
@@ -926,11 +856,7 @@ function doGet(e) {
         success: false, 
         error: error.message || 'Internal server error'
       }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      });
+      .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
@@ -1027,12 +953,7 @@ function doPost(e) {
 
     return ContentService
       .createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      });
-
+      .setMimeType(ContentService.MimeType.JSON);
   } catch (error) {
     console.error('doPost error:', error);
     return ContentService
@@ -1040,11 +961,7 @@ function doPost(e) {
         success: false, 
         error: error.message || 'Internal server error'
       }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      });
+      .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
@@ -1193,57 +1110,37 @@ function migrateToNewSchema() {
   }
 }
 
-function testEndpoints() {
-  console.log('Testing endpoints...');
-  
-  const tests = [
-    { name: 'Health Check', url: `${ScriptApp.getService().getUrl()}?action=health` },
-    { name: 'Get Documents', url: `${ScriptApp.getService().getUrl()}?action=getDocuments` }
+// Test function for AI responses
+function testAIResponse() {
+  const testQuestions = [
+    "Me yasa Imam Mahdi yake cikin ghaibah?",
+    "What are the signs of Imam Mahdi's reappearance?",
+    "ما هي المهدوية؟",
+    "Salaam Alaikum",
+    "Hello, who is Sheikh Zakzaky?",
+    "Tell me about Allamah Bahajati",
+    "Me game da Intizar?"
   ];
   
-  tests.forEach(test => {
-    console.log(`\nTesting: ${test.name}`);
+  console.log('Testing AI responses with clean prompt...\n');
+  
+  testQuestions.forEach((question, index) => {
+    console.log(`\n=== Test ${index + 1} ===`);
+    console.log(`Question: ${question}`);
+    console.log(`Detected language: ${detectLanguage(question)}`);
+    
     try {
-      const response = UrlFetchApp.fetch(test.url, { muteHttpExceptions: true });
-      console.log('Status:', response.getResponseCode());
-      console.log('Response:', response.getContentText().substring(0, 200));
-    } catch (error) {
-      console.error('Error:', error.message);
+      const result = handleAIRequest(question);
+      if (result.success) {
+        console.log('Response length:', result.response.length);
+        console.log('First 200 chars:', result.response.substring(0, 200) + '...');
+      } else {
+        console.log('Error:', result.error);
+      }
+    } catch (e) {
+      console.log('Exception:', e.message);
     }
   });
-}
-
-function testSchema() {
-  const sheet = ensureSheetExists();
-  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  console.log('Headers:', headers);
-  console.log('Header count:', headers.length);
-}
-
-function testValidation() {
-  const testData = {
-    title: 'Test Book',
-    author: 'Test Author',
-    description: 'Test description',
-    language: 'hausa',
-    category: 'ideology',
-    source: 'intizar',
-    externalLink: 'https://example.com'
-  };
-  
-  const result = validateBookMetadata(testData);
-  console.log('Validation result:', result);
-}
-
-function testGetDocs() {
-  const result = handleGetDocuments();
-  if (result.success && result.documents.length > 0) {
-    const doc = result.documents[0];
-    console.log('First doc has language:', doc.Language);
-    console.log('First doc has category:', doc.Category);
-    console.log('First doc has source:', doc.Source);
-    console.log('First doc has cover image:', doc.CoverImageUrl);
-  }
 }
 
 function testLanguageDetection() {
@@ -1262,27 +1159,8 @@ function testLanguageDetection() {
   });
 }
 
-function testMahdawiyyahDetection() {
-  const tests = [
-    { text: 'What is Islam?', expected: true },
-    { text: 'Who is Imam Mahdi?', expected: true },
-    { text: 'Tell me about Sheikh Zakzaky', expected: true },
-    { text: 'What did Allamah Bahajatiy say?', expected: true },
-    { text: 'Explain Ghaybah', expected: true },
-    { text: 'What is the weather today?', expected: false },
-    { text: 'Me game da Intizara?', expected: true },
-    { text: 'ما هي المهدوية؟', expected: true },
-  ];
-  
-  tests.forEach(test => {
-    const result = isMahdawiyyahRelated(test.text);
-    console.log(`Text: "${test.text.substring(0, 30)}..."`);
-    console.log(`Expected: ${test.expected}, Got: ${result}, Match: ${result === test.expected ? '✓' : '✗'}`);
-  });
-}
-
 function initialize() {
-  console.log('Initializing Intizar Digital Library with enhanced Mahdawiyyah focus...');
+  console.log('Initializing Intizar Digital Library with clean AI prompt...');
   
   const setupResult = setup();
   console.log('Setup result:', setupResult);
@@ -1290,18 +1168,14 @@ function initialize() {
   console.log('\nTesting language detection:');
   testLanguageDetection();
   
-  console.log('\nTesting Mahdawiyyah detection:');
-  testMahdawiyyahDetection();
-  
-  console.log('\nTesting schema:');
-  testSchema();
+  console.log('\nTesting AI responses:');
+  testAIResponse();
   
   return {
     success: true,
-    message: 'Initialization complete with enhanced Mahdawiyyah focus',
+    message: 'Initialization complete with clean AI prompt',
     setup: setupResult,
     defaultLanguage: 'hausa',
-    mahdawiyyahKeywordsCount: MAHDAWIYYAH_KEYWORDS.length,
-    enhancedPrompt: 'Meta validation removed as requested'
+    mahdawiyyahKeywordsCount: MAHDAWIYYAH_KEYWORDS.length
   };
 }
