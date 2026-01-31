@@ -6,7 +6,7 @@
 // Configuration - UPDATED WITH NEW URL!
 const ADMIN = {
     // ✅ UPDATED BACKEND URL
-    backendUrl: 'https://script.google.com/macros/s/AKfycbxPIgiMv3cLO0qqgTFf9_z8ock1ZMT2Z6_xG-0CSds_h4GYV3_9uHiHZAmws-TkQeWt/exec',
+    backendUrl: 'https://script.google.com/macros/s/AKfycbwuI-i1YvjK5RUD9MCSehAhloqoS4yESJ3WyiZ2jyWY-rJ1zPlwdIn8NdWV6Lk7abQj/exec',
     
     // Session management
     token: localStorage.getItem('admin_token') || null,
