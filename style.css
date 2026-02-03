@@ -1187,11 +1187,11 @@ header {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 .message {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding: 1rem;
     border-radius: var(--radius);
     max-width: 85%;
@@ -1315,10 +1315,10 @@ header {
 }
 
 .ai-notice {
-    font-size: 0.85rem;
+    font-size: 0.5rem;
     color: #666;
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     font-style: italic;
     padding: 10px;
     background: #f8f9fa;
