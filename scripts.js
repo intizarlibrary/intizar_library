@@ -68,7 +68,7 @@ function initSurahAnimation() {
 // ==================== APP CONFIGURATION ====================
 
 const APP = {
-    backendUrl: 'https://script.google.com/macros/s/AKfycbyiF4UO6cdCG5kDldLBRMZ2S9dFQhfgiMFNzSXxSO_2P4BPiicNZ5_K2HHV-dvGXrI8/exec',
+    backendUrl: 'https://script.google.com/macros/s/AKfycbyIu_wRDseOugG4aITSoa4UJzjOowye9VVHy0gOdW6sTKScj92MpO1tXF59wAuKG5Ta/exec',
     
     // Enhanced default documents with all metadata
     defaultDocs: [
