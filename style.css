@@ -469,7 +469,7 @@ header {
 
 .filter-row {
     display: flex;
-    gap: 1rem;
+    gap: 0.7rem;
     flex-wrap: wrap;
     align-items: flex-end;
 }
@@ -768,7 +768,7 @@ header {
 
 .about-img {
     width: 100%;
-    height: 140px;
+    height: 200px;
     object-fit: cover;
     border-radius: var(--radius);
     border: 3px solid var(--accent);
